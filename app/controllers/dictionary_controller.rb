@@ -4,10 +4,12 @@ class DictionaryController < ApplicationController
 
     def search
         terms = find_term(params[:term])
+        puts terms
         unless terms
           flash[:alert] = 'Term not found'
           return render action: :index
-        end        
+        end  
+        @term = terms
     end
 
     private
@@ -15,8 +17,8 @@ class DictionaryController < ApplicationController
       response = Excon.get(
         url,
         headers: {
-          'app_id' => '',
-          'app_key' => ''
+          'app_id' => 'e53bf98b',
+          'app_key' => '94ce74f763ee75b7331c9b61fc18d8b1'
         }
       )
       return nil if response.status != 200
