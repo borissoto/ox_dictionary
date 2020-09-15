@@ -3,13 +3,20 @@ class DictionaryController < ApplicationController
     end
 
     def search
-        terms = find_term(params[:term])
-        puts terms
-        unless terms
-          flash[:alert] = 'Term not found'
-          return render action: :index
-        end  
-        @term = terms
+        terms = find_term(params[:term])        
+        # if !terms
+        #     puts 'no existe'
+        # end    
+        if !terms
+            flash[:alert] = 'No entry found matching supplied source_lang, word and provided filters'
+            return render action: :index                  
+        else
+            word = terms['word']
+            definition = terms['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]            
+            @word = word
+            @term = definition
+        end 
+        
     end
 
     private
@@ -23,11 +30,14 @@ class DictionaryController < ApplicationController
       )
       return nil if response.status != 200
       JSON.parse(response.body)
+      
+      
+      
     end
 
     def find_term(term)
       request_api(
-        "https://od-api.oxforddictionaries.com/api/v2/entries/en-us/#{term}"
+        "https://od-api.oxforddictionaries.com/api/v2/entries/en-us/#{term.downcase}"
     )
     end
 
