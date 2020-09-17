@@ -5,10 +5,9 @@ class DictionaryController < ApplicationController
     end
 
     def search
-        terms = find_term(params[:term])   
-        puts terms                
+        terms = find_term(params[:term])           
         if terms['status'] != 'OK'
-            puts terms['response']
+            # puts terms['response']
             flash[:alert] = terms['response']
             return render action: :index                  
         else
